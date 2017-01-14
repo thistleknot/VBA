@@ -14,9 +14,10 @@ Sub RunSELECT()
     
     sType = "Creature"
     testColor = "{W}"
-    testRarity = 2
+    testRarity = 3
     testCost = 2
-    whereString = "WHERE [Rarity2] > " & testRarity & " AND [COLOR_IDENTITY]='" & testColor & "'" & " AND [SimpleType] = " & "'" & sType & "'"
+    
+    whereString = "WHERE [Rarity2] < " & testRarity & " AND [COLOR_IDENTITY]='" & testColor & "'" & " AND [SimpleType] = " & "'" & sType & "'" & " AND [Cost2] = " & "'" & testCost & "'"
     
     '---Connecting to the Data Source---
     Set cn = CreateObject("ADODB.Connection")
