@@ -1,6 +1,7 @@
 Sub RunSELECT()
     Dim cn As Object, rs As Object, output As String, sql As String
     Dim sType As String
+    Dim count As Integer
     
     sType = "Creature"
     
@@ -15,14 +16,14 @@ Sub RunSELECT()
     
     
     '---Run the SQL SELECT Query---
-    sql = "SELECT * FROM [Sheet1$] " & _
+    sql = "SELECT Count(*) FROM [Sheet1$] " & _
          "WHERE [SimpleType] = " & Chr$(39) & sType & Chr$(39)
          
     Set rs = cn.Execute(sql)
     
     Do
-       output = output & rs(0) & ";" & rs(1) & ";" & rs(2) & vbNewLine
-       Debug.Print rs(0); ";" & rs(1) & ";" & rs(2)
+       output = output & rs(0) '& ";" & rs(1) & ";" & rs(2) & vbNewLine
+       Debug.Print rs(0); '";" & rs(1) & ";" & rs(2)
        rs.Movenext
     Loop Until rs.EOF
     MsgBox output
