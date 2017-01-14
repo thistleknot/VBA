@@ -4,6 +4,8 @@ Sub RunSELECT()
     Dim count As Integer
     
     sType = "Creature"
+    testColor = "{W}"
+    testRarity = "2"
     
     '---Connecting to the Data Source---
     Set cn = CreateObject("ADODB.Connection")
@@ -17,7 +19,7 @@ Sub RunSELECT()
     
     '---Run the SQL SELECT Query---
     sql = "SELECT Count(*) FROM [Sheet1$] " & _
-         "WHERE [SimpleType] = " & Chr$(39) & sType & Chr$(39)
+         "WHERE [Rarity2] > " & testRarity & " AND [COLOR_IDENTITY]='" & testColor & "'" & " AND [SimpleType] = " & Chr$(39) & sType & Chr$(39)
          
     Set rs = cn.Execute(sql)
     
