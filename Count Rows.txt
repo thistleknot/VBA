@@ -21,7 +21,7 @@ Sub RunSELECT()
     
     '---Run the SQL SELECT Query---
     sql = "SELECT COUNT(*) FROM [Sheet1$] " & _
-         "WHERE [Rarity2] > " & testRarity & " AND [COLOR_IDENTITY]='" & testColor & "'" & " AND [SimpleType] = " & Chr$(39) & sType & Chr$(39)
+         "WHERE [Rarity2] > " & testRarity & " AND [COLOR_IDENTITY]='" & testColor & "'" & " AND [SimpleType] = " & "'" & sType & "'"
          
     Set rs = cn.Execute(sql)
     
