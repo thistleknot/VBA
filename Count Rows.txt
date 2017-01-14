@@ -7,9 +7,17 @@ Sub getNumber()
     Dim testString() As Variant
     testColor = "{W}"
     testRarity = "2"
+    manaCost = "2"
+    Dim baseType As String
+    baseType = "Creature"
+    
     Dim count As Integer
     
+    Dim position As Integer
+    
     Dim stringArray() As String
+    
+    Dim Entries As Collection
     
     
     '---Connecting to the Data Source---
@@ -24,7 +32,12 @@ Sub getNumber()
     
      '---Run the SQL SELECT Query---
     'sql = "SELECT COUNT(*) FROM [Sheet1$] Where [Rarity2] > " & testRarity & " AND [COLOR_IDENTITY]='" & testColor & "'"
+    'works
+    
     sql = "SELECT COUNT(*) FROM [Sheet1$] Where [Rarity2] > " & testRarity & " AND [COLOR_IDENTITY]='" & testColor & "'"
+    
+    'won't allow me to filter by type
+    'sql = "SELECT COUNT(*) FROM [Sheet1$] Where [SimpleType] == '" & baseType & "' AND [COLOR_IDENTITY]='" & testColor & "'"
     Set rs = cn.Execute(sql)
     
 
@@ -48,6 +61,7 @@ Sub getNumber()
     
      Do Until rs.EOF
         stringArray(i) = rs.Fields(0)
+        'Entries.Add(stringArray(i), i)
        'output = output & rs(0) & vbNewLine '& ";" & rs(1) & ";" & rs(2) & vbNewLine
        'stringArray(i) = rs(0)
        'stringArray(0) = output
@@ -60,7 +74,10 @@ Sub getNumber()
     
     'MsgBox stringArray(10)
     'MsgBox stringArray(count)
-    MsgBox stringArray(Round(Rnd * count, 0))
+    position = Round(Rnd * count, 0)
+    MsgBox stringArray(position)
+    
+    'DeleteElementAt(position, stringArray)
     
     '---Clean up---
     rs.Close
@@ -72,8 +89,17 @@ Sub getNumber()
 End Sub
 
 
+Public Sub DeleteElementAt(ByVal index As Integer, ByRef prLst As Variant)
+       Dim i As Integer
 
+        ' Move all element back one position
+        For i = index + 1 To UBound(prLst)
+            prLst(i - 1) = prLst(i)
+        Next
 
+        ' Shrink the array by one, removing the last one
+        ReDim Preserve prLst(Len(prLst) - 1)
+End Sub
 
 
 
