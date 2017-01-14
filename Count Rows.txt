@@ -4,9 +4,10 @@ Sub getNumber()
     Dim b As Integer
     Dim i As Integer
     
-    Dim testString As String
+    Dim testString() As Variant
     testColor = "{W}"
     testRarity = "2"
+    Dim count As Integer
     
     Dim stringArray() As String
     
@@ -30,29 +31,36 @@ Sub getNumber()
     Do
        'output = output & rs(0) '& ";" & rs(1) & ";" & rs(2) & vbNewLine
        'Debug.Print rs(0); '";" & rs(1) & ";" & rs(2)
-        b = rs(0)
+        count = rs(0)
        rs.Movenext
     Loop Until rs.EOF
     'MsgBox output
     
-    ReDim stringArray(b)
+    ReDim stringArray(count)
     
-    sql = "SELECT [NAME] FROM [Sheet1$]"
+    sql = "SELECT [NAME] FROM [Sheet1$] Where [Rarity2] > " & testRarity & " AND [COLOR_IDENTITY]='" & testColor & "'"
     Set rs = cn.Execute(sql)
+    
+    'reset to beginning of file
+    rs.MoveFirst
     
     i = 0
     
-     Do
-       output = output & rs(0) '& ";" & rs(1) & ";" & rs(2) & vbNewLine
-       stringArray(i) = rs(0)
+     Do Until rs.EOF
+        stringArray(i) = rs.Fields(0)
+       'output = output & rs(0) & vbNewLine '& ";" & rs(1) & ";" & rs(2) & vbNewLine
+       'stringArray(i) = rs(0)
        'stringArray(0) = output
-       Debug.Print rs(0); '";" & rs(1) & ";" & rs(2)
+       'Debug.Print rs(0); '";" & rs(1) & ";" & rs(2)
         'b = rs(0)
-        'i = i + 1
+        i = i + 1
        rs.Movenext
-    Loop Until rs.EOF
+    Loop
     'MsgBox output
-    MsgBox stringArray(0)
+    
+    'MsgBox stringArray(10)
+    'MsgBox stringArray(count)
+    MsgBox stringArray(Round(Rnd * count, 0))
     
     '---Clean up---
     rs.Close
@@ -62,6 +70,8 @@ Sub getNumber()
     
 '    RunSELECT = b
 End Sub
+
+
 
 
 
