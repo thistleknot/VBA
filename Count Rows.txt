@@ -1,4 +1,4 @@
-Sub RunSELECT()
+Sub ReturnRandom()
     Dim cn As Object, rs As Object, output As String, sql As String
     
     Dim count As Integer
@@ -60,7 +60,7 @@ Sub RunSELECT()
        rs.Movenext
     Loop
     
-    position = Round(Rnd * count, 0)
+    position = Round(Rnd * (count - 1), 0)
     MsgBox stringArray(position)
     
     MsgBox Join(stringArray, vbCrLf)
