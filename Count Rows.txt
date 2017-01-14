@@ -1,7 +1,11 @@
-Sub RunSELECT()
+Sub getNumber()
     Dim cn As Object, rs As Object, output As String, sql As String
     
     Dim b As Integer
+    
+    Dim testString As String
+    testColor = "{W}"
+    testRarity = "2"
     
     '---Connecting to the Data Source---
     Set cn = CreateObject("ADODB.Connection")
@@ -14,7 +18,7 @@ Sub RunSELECT()
     
     
      '---Run the SQL SELECT Query---
-        sql = "SELECT COUNT(*) FROM [Sheet1$] Where [Rarity2] > 2 AND [COLOR_IDENTITY]='{G}'"
+    sql = "SELECT COUNT(*) FROM [Sheet1$] Where [Rarity2] > " & testRarity & " AND [COLOR_IDENTITY]='" & testColor & "'"
     Set rs = cn.Execute(sql)
     
     Do
@@ -34,6 +38,8 @@ Sub RunSELECT()
     
 '    RunSELECT = b
 End Sub
+
+
 
 
 
