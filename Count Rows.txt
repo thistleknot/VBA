@@ -1,24 +1,13 @@
-Sub getNumber()
+Sub RunSELECT()
     Dim cn As Object, rs As Object, output As String, sql As String
-    
-    Dim b As Integer
-    Dim i As Integer
-    
-    Dim testString() As Variant
-    testColor = "{W}"
-    testRarity = "2"
-    manaCost = "2"
-    Dim baseType As String
-    baseType = "Creature"
-    
+    Dim sType As String
     Dim count As Integer
     
-    Dim position As Integer
+    Dim i As Integer
     
-    Dim stringArray() As String
-    
-    Dim Entries As Collection
-    
+    sType = "Creature"
+    testColor = "{W}"
+    testRarity = "2"
     
     '---Connecting to the Data Source---
     Set cn = CreateObject("ADODB.Connection")
@@ -30,30 +19,25 @@ Sub getNumber()
     End With
     
     
-     '---Run the SQL SELECT Query---
-    'sql = "SELECT COUNT(*) FROM [Sheet1$] Where [Rarity2] > " & testRarity & " AND [COLOR_IDENTITY]='" & testColor & "'"
-    'works
-	'    sql = "SELECT * FROM [Sheet1$] " & _
-         "WHERE [SimpleType] = " & Chr$(39) & sType & Chr$(39)
-    
-    sql = "SELECT COUNT(*) FROM [Sheet1$] Where [Rarity2] > " & testRarity & " AND [COLOR_IDENTITY]='" & testColor & "'"
-    
-    'won't allow me to filter by type
-    'sql = "SELECT COUNT(*) FROM [Sheet1$] Where [SimpleType] == '" & baseType & "' AND [COLOR_IDENTITY]='" & testColor & "'"
+    '---Run the SQL SELECT Query---
+    sql = "SELECT COUNT(*) FROM [Sheet1$] " & _
+         "WHERE [Rarity2] > " & testRarity & " AND [COLOR_IDENTITY]='" & testColor & "'" & " AND [SimpleType] = " & Chr$(39) & sType & Chr$(39)
+         
     Set rs = cn.Execute(sql)
     
-
     Do
        'output = output & rs(0) '& ";" & rs(1) & ";" & rs(2) & vbNewLine
        'Debug.Print rs(0); '";" & rs(1) & ";" & rs(2)
-        count = rs(0)
+       count = rs(0)
        rs.Movenext
     Loop Until rs.EOF
     'MsgBox output
     
     ReDim stringArray(count)
     
-    sql = "SELECT [NAME] FROM [Sheet1$] Where [Rarity2] > " & testRarity & " AND [COLOR_IDENTITY]='" & testColor & "'"
+    sql = "SELECT [NAME] FROM [Sheet1$] " & _
+    "WHERE [Rarity2] > " & testRarity & " AND [COLOR_IDENTITY]='" & testColor & "'" & " AND [SimpleType] = " & Chr$(39) & sType & Chr$(39)
+    
     Set rs = cn.Execute(sql)
     
     'reset to beginning of file
@@ -74,7 +58,7 @@ Sub getNumber()
     Loop
     'MsgBox output
     
-    'MsgBox stringArray(10)
+    'MsgBox stringArray(0)
     'MsgBox stringArray(count)
     position = Round(Rnd * count, 0)
     MsgBox stringArray(position)
@@ -86,21 +70,7 @@ Sub getNumber()
     cn.Close
     Set cn = Nothing
     Set rs = Nothing
-    
-'    RunSELECT = b
-End Sub
 
-
-Public Sub DeleteElementAt(ByVal index As Integer, ByRef prLst As Variant)
-       Dim i As Integer
-
-        ' Move all element back one position
-        For i = index + 1 To UBound(prLst)
-            prLst(i - 1) = prLst(i)
-        Next
-
-        ' Shrink the array by one, removing the last one
-        ReDim Preserve prLst(Len(prLst) - 1)
 End Sub
 
 
