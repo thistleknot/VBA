@@ -33,6 +33,8 @@ Sub getNumber()
      '---Run the SQL SELECT Query---
     'sql = "SELECT COUNT(*) FROM [Sheet1$] Where [Rarity2] > " & testRarity & " AND [COLOR_IDENTITY]='" & testColor & "'"
     'works
+	'    sql = "SELECT * FROM [Sheet1$] " & _
+         "WHERE [SimpleType] = " & Chr$(39) & sType & Chr$(39)
     
     sql = "SELECT COUNT(*) FROM [Sheet1$] Where [Rarity2] > " & testRarity & " AND [COLOR_IDENTITY]='" & testColor & "'"
     
