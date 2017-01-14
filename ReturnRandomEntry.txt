@@ -1,0 +1,80 @@
+Function ReturnRandomEntry()
+    Dim cn As Object, rs As Object, output As String, sql As String
+    
+    Dim count As Integer
+    
+    Dim sType As String
+    Dim testColor As String
+    Dim testRarity As Integer
+    Dim testCost As Integer
+    Dim searchString As String
+    
+    'loop counter
+    Dim i As Integer
+    
+    sType = "Creature"
+    testColor = "{W}"
+    testRarity = 3
+    testCost = 2
+    
+    whereString = "WHERE [Rarity2] < " & testRarity & " AND [COLOR_IDENTITY]='" & testColor & "'" & " AND [SimpleType] = " & "'" & sType & "'" & " AND [Cost2] = " & "'" & testCost & "'"
+    
+    '---Connecting to the Data Source---
+    Set cn = CreateObject("ADODB.Connection")
+    With cn
+        .Provider = "Microsoft.ACE.OLEDB.12.0"
+        .ConnectionString = "Data Source=" & ThisWorkbook.Path & "\" & ThisWorkbook.Name & ";" & _
+        "Extended Properties=""Excel 12.0 Xml;HDR=YES"";"
+        .Open
+    End With
+    
+    
+    '---Run the SQL SELECT Query---
+    sql = "SELECT COUNT(*) FROM [Sheet1$] " & _
+         whereString
+         
+    Set rs = cn.Execute(sql)
+    
+    'Get Count
+    Do
+       count = rs(0)
+       rs.Movenext
+    Loop Until rs.EOF
+    'MsgBox count
+    
+    ReDim stringArray(count)
+    
+    'Same query as above, but select [Name] vs Count(*)
+    sql = "SELECT [NAME] FROM [Sheet1$] " & _
+        whereString
+    Set rs = cn.Execute(sql)
+    
+    'reset to beginning of file
+    rs.MoveFirst
+    
+    i = 0
+    
+     Do Until rs.EOF
+        stringArray(i) = rs.Fields(0)
+        i = i + 1
+       rs.Movenext
+    Loop
+    
+    position = Round(Rnd * (count - 1), 0)
+    'MsgBox stringArray(position)
+    
+    'MsgBox Join(stringArray, vbCrLf)
+    ReturnRandomEntry = stringArray(position)
+    
+    '---Clean up---
+    rs.Close
+    cn.Close
+    Set cn = Nothing
+    Set rs = Nothing
+
+End Function
+
+
+
+
+
