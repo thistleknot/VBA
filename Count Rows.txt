@@ -47,7 +47,6 @@ Sub RunSELECT()
     'Same query as above, but select [Name] vs Count(*)
     sql = "SELECT [NAME] FROM [Sheet1$] " & _
         whereString
-    
     Set rs = cn.Execute(sql)
     
     'reset to beginning of file
@@ -64,7 +63,7 @@ Sub RunSELECT()
     position = Round(Rnd * count, 0)
     MsgBox stringArray(position)
     
-    'DeleteElementAt(position, stringArray)
+    MsgBox Join(stringArray, vbCrLf)
     
     '---Clean up---
     rs.Close
