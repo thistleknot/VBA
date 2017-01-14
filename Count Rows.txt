@@ -7,6 +7,7 @@ Sub getNumber()
     testColor = "{W}"
     testRarity = "2"
     
+    
     '---Connecting to the Data Source---
     Set cn = CreateObject("ADODB.Connection")
     With cn
@@ -18,6 +19,7 @@ Sub getNumber()
     
     
      '---Run the SQL SELECT Query---
+    'sql = "SELECT COUNT(*) FROM [Sheet1$] Where [Rarity2] > " & testRarity & " AND [COLOR_IDENTITY]='" & testColor & "'"
     sql = "SELECT COUNT(*) FROM [Sheet1$] Where [Rarity2] > " & testRarity & " AND [COLOR_IDENTITY]='" & testColor & "'"
     Set rs = cn.Execute(sql)
     
@@ -29,6 +31,16 @@ Sub getNumber()
     Loop Until rs.EOF
     MsgBox output
     
+    sql = "SELECT [NAME] FROM [Sheet1$]"
+    Set rs = cn.Execute(sql)
+    
+     Do
+       output = output & rs(0) '& ";" & rs(1) & ";" & rs(2) & vbNewLine
+       'Debug.Print rs(0); '";" & rs(1) & ";" & rs(2)
+        'b = rs(0)
+       rs.Movenext
+    Loop Until rs.EOF
+    MsgBox output
     
     '---Clean up---
     rs.Close
