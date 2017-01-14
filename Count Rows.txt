@@ -37,7 +37,7 @@ Sub getNumber()
     sql = "SELECT COUNT(*) FROM [Sheet1$] Where [Rarity2] > " & testRarity & " AND [COLOR_IDENTITY]='" & testColor & "'"
     
     'won't allow me to filter by type
-    'sql = "SELECT COUNT(*) FROM [Sheet1$] Where [SimpleType] == '" & baseType & "' AND [COLOR_IDENTITY]='" & testColor & "'"
+    'sql = "SELECT COUNT(*) FROM [Sheet1$] Where [Sheet1$].[SimpleType] == '" & baseType & "' AND [COLOR_IDENTITY]='" & testColor & "'"
     Set rs = cn.Execute(sql)
     
 
