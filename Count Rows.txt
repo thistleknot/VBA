@@ -25,16 +25,16 @@ Sub RunSELECT()
          
     Set rs = cn.Execute(sql)
     
+    'Get Count
     Do
-       'output = output & rs(0) '& ";" & rs(1) & ";" & rs(2) & vbNewLine
-       'Debug.Print rs(0); '";" & rs(1) & ";" & rs(2)
        count = rs(0)
        rs.Movenext
     Loop Until rs.EOF
-    'MsgBox output
+    MsgBox count
     
     ReDim stringArray(count)
     
+    'Same query as above, but select [Name] vs Count(*)
     sql = "SELECT [NAME] FROM [Sheet1$] " & _
     "WHERE [Rarity2] > " & testRarity & " AND [COLOR_IDENTITY]='" & testColor & "'" & " AND [SimpleType] = " & Chr$(39) & sType & Chr$(39)
     
@@ -47,19 +47,10 @@ Sub RunSELECT()
     
      Do Until rs.EOF
         stringArray(i) = rs.Fields(0)
-        'Entries.Add(stringArray(i), i)
-       'output = output & rs(0) & vbNewLine '& ";" & rs(1) & ";" & rs(2) & vbNewLine
-       'stringArray(i) = rs(0)
-       'stringArray(0) = output
-       'Debug.Print rs(0); '";" & rs(1) & ";" & rs(2)
-        'b = rs(0)
         i = i + 1
        rs.Movenext
     Loop
-    'MsgBox output
     
-    'MsgBox stringArray(0)
-    'MsgBox stringArray(count)
     position = Round(Rnd * count, 0)
     MsgBox stringArray(position)
     
