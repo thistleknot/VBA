@@ -19,21 +19,17 @@ Function ReturnRandomEntry(sType As String, testColor As String, testRarity As I
     'whereString = "WHERE [Rarity2] = " & _
     'testRarity & " AND [COLOR_IDENTITY]='" & testColor & "'" & " AND [SimpleType] = " & "'" & sType & "'" & " AND [Cost2] = " & "'" & testCost & "'"
     
-    'Creature/Artifact
+    'If Creature, include color and non color (Artifact)
     If sType = Creature Then
-       whereString = "WHERE [Rarity2] = " & testRarity & " AND [COLOR_IDENTITY] = " & "'" & testColor & "'" & " And [SimpleType] = " & " '" & sType & "'" & " AND [Cost2] = " & "'" & testCost & "'"
+       whereString = "WHERE [Rarity2] = " & testRarity & " AND ([COLOR_IDENTITY] = " & "'" & testColor & "'" & "OR IsNull([COLOR_IDENTITY])) And [SimpleType] = " & " '" & sType & "'" & " AND [Cost2] = " & "'" & testCost & "'"
     End If
     
     'If Artifact, include color and non color
-    If testColor = "" Then
+    If sType = "Artifact" Then
         whereString = "WHERE [Rarity2] = " & testRarity & " AND ([COLOR_IDENTITY] = " & "'" & testColor & "'" & "OR IsNull([COLOR_IDENTITY])) And [SimpleType] = " & " '" & sType & "'" & " AND [Cost2] = " & "'" & testCost & "'"
     Else
         whereString = "WHERE [Rarity2] = " & testRarity & " AND [COLOR_IDENTITY] = " & "'" & testColor & "'" & " And [SimpleType] = " & " '" & sType & "'" & " AND [Cost2] = " & "'" & testCost & "'"
     End If
-    
-    
-    
-    
     
     '---Connecting to the Data Source---
     Set cn = CreateObject("ADODB.Connection")
