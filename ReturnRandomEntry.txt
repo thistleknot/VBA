@@ -32,7 +32,7 @@ Function ReturnRandomEntry(sType As String, testColor As String, testRarity As I
     'Cannot pass "<=" as parameters :/
     If (sType = "Sorcery") Then
         If testCost <= 2 Then
-            whereString = "WHERE [Rarity2] = " & testRarity & " AND [COLOR_IDENTITY] = " & "'" & testColor & "'" & " And [SimpleType] = " & " '" & sType & "'" & " AND [Cost2] " & "<=" & "'" & 3 & "'"
+            whereString = "WHERE [Rarity2] = " & testRarity & " AND [COLOR_IDENTITY] = " & "'" & testColor & "'" & " And [SimpleType] = " & " '" & sType & "'" & " AND [Cost2] " & "<=" & "'" & 2 & "'"
         Else
             whereString = "WHERE [Rarity2] = " & testRarity & " AND [COLOR_IDENTITY] = " & "'" & testColor & "'" & " And [SimpleType] = " & " '" & sType & "'" & " AND [Cost2] " & ">=" & "'" & 3 & "'"
         End If
@@ -42,7 +42,7 @@ Function ReturnRandomEntry(sType As String, testColor As String, testRarity As I
         If testCost <= 2 Then
             whereString = "WHERE [Rarity2] = " & testRarity & " AND [COLOR_IDENTITY] = " & "'" & testColor & "'" & " And [SimpleType] = " & " '" & sType & "'" & " AND [Cost2] " & "<=" & "'" & 2 & "'"
         Else
-            whereString = "WHERE [Rarity2] = " & testRarity & " AND [COLOR_IDENTITY] = " & "'" & testColor & "'" & " And [SimpleType] = " & " '" & sType & "'" & " AND [Cost2] " & ">=" & "'" & 2 & "'"
+            whereString = "WHERE [Rarity2] = " & testRarity & " AND [COLOR_IDENTITY] = " & "'" & testColor & "'" & " And [SimpleType] = " & " '" & sType & "'" & " AND [Cost2] " & ">" & "'" & 2 & "'"
         End If
     End If
     
@@ -56,7 +56,7 @@ Function ReturnRandomEntry(sType As String, testColor As String, testRarity As I
             If testCost <= 2 Then
                 whereString = "WHERE [Rarity2] = " & testRarity & " AND ([COLOR_IDENTITY] = " & "'" & testColor & "'" & " OR IsNull([COLOR_IDENTITY])) And [SimpleType] = " & " '" & sType & "'" & " AND [Cost2] " & "<=" & "'" & 2 & "'"
             Else
-                whereString = "WHERE [Rarity2] = " & testRarity & " AND ([COLOR_IDENTITY] = " & "'" & testColor & "'" & " OR IsNull([COLOR_IDENTITY])) And [SimpleType] = " & " '" & sType & "'" & " AND [Cost2] " & ">=" & "'" & 2 & "'"
+                whereString = "WHERE [Rarity2] = " & testRarity & " AND ([COLOR_IDENTITY] = " & "'" & testColor & "'" & " OR IsNull([COLOR_IDENTITY])) And [SimpleType] = " & " '" & sType & "'" & " AND [Cost2] " & ">" & "'" & 2 & "'"
             End If
             
     End If
