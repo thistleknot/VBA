@@ -3,31 +3,11 @@ Function ReturnRandomEntry(sType As String, testColor As String, testRarity As I
     
     Dim count As Integer
     
-    'Dim sType As String
-    'Dim testColor As String
-    'Dim testRarity As Integer
-    'Dim testCost As Integer
     Dim testCostParsed As Integer
     Dim testCostComparison As String
-
     
     'loop counter
     Dim i As Integer
-    
-    'testColor = "{R}"
-    'testRarity = 1
-    'testCostComparison = "<="
-    'testCost = "5"
-    
-    'sType = "Creature"
-    'testColor = "{W}"
-    'testRarity = 3
-    'testCost = 2
-    
-    'whereString = "WHERE [Rarity2] = " & _
-    'testRarity & " AND [COLOR_IDENTITY]='" & testColor & "'" & " AND [SimpleType] = " & "'" & sType & "'" & " AND [Cost2] = " & "'" & testCost & "'"
-    
-    
     
     'Cannot pass "<=" as parameters :/
     If (sType = "Sorcery") Then
@@ -63,7 +43,11 @@ Function ReturnRandomEntry(sType As String, testColor As String, testRarity As I
     
     'Instant
     If sType = "Instant" Then
+        If testCost > 3 Then
+        whereString = "WHERE [Rarity2] = " & testRarity & " AND [COLOR_IDENTITY] = " & "'" & testColor & "'" & " And [SimpleType] = " & " '" & sType & "'" & " AND [Cost2] " & ">" & "'" & 3 & "'"
+        Else
         whereString = "WHERE [Rarity2] = " & testRarity & " AND [COLOR_IDENTITY] = " & "'" & testColor & "'" & " And [SimpleType] = " & " '" & sType & "'" & " AND [Cost2] = " & "'" & testCost & "'"
+        End If
     End If
     
     'MsgBox whereString
@@ -122,6 +106,103 @@ Function ReturnRandomEntry(sType As String, testColor As String, testRarity As I
     Set rs = Nothing
 
 End Function
+
+Function ReturnEntryCount(sType As String, testColor As String, testRarity As Integer, testCost As String)
+    Dim cn As Object, rs As Object, output As String, sql As String
+    
+    Dim count As Integer
+
+    Dim testCostParsed As Integer
+    Dim testCostComparison As String
+
+    
+    'loop counter
+    Dim i As Integer
+
+    'Same code as up top for the if chaisn
+    'Cannot pass "<=" as parameters :/
+    If (sType = "Sorcery") Then
+        If testCost <= 2 Then
+            whereString = "WHERE [Rarity2] = " & testRarity & " AND [COLOR_IDENTITY] = " & "'" & testColor & "'" & " And [SimpleType] = " & " '" & sType & "'" & " AND [Cost2] " & "<=" & "'" & 2 & "'"
+        Else
+            whereString = "WHERE [Rarity2] = " & testRarity & " AND [COLOR_IDENTITY] = " & "'" & testColor & "'" & " And [SimpleType] = " & " '" & sType & "'" & " AND [Cost2] " & ">=" & "'" & 3 & "'"
+        End If
+    End If
+    
+    If (sType = "Enchantment") Then
+        If testCost <= 2 Then
+            whereString = "WHERE [Rarity2] = " & testRarity & " AND [COLOR_IDENTITY] = " & "'" & testColor & "'" & " And [SimpleType] = " & " '" & sType & "'" & " AND [Cost2] " & "<=" & "'" & 2 & "'"
+        Else
+            whereString = "WHERE [Rarity2] = " & testRarity & " AND [COLOR_IDENTITY] = " & "'" & testColor & "'" & " And [SimpleType] = " & " '" & sType & "'" & " AND [Cost2] " & ">" & "'" & 2 & "'"
+        End If
+    End If
+    
+    'If Creature, include color and non color (Artifact)
+    If sType = "Creature" Then
+       whereString = "WHERE [Rarity2] = " & testRarity & " AND ([COLOR_IDENTITY] = " & "'" & testColor & "'" & " OR IsNull([COLOR_IDENTITY])) And [SimpleType] = " & " '" & sType & "'" & " AND [Cost2] = " & "'" & testCost & "'"
+    End If
+    
+    'If Artifact, include color and non color
+    If sType = "Artifact" Then
+            If testCost <= 2 Then
+                whereString = "WHERE [Rarity2] = " & testRarity & " AND ([COLOR_IDENTITY] = " & "'" & testColor & "'" & " OR IsNull([COLOR_IDENTITY])) And [SimpleType] = " & " '" & sType & "'" & " AND [Cost2] " & "<=" & "'" & 2 & "'"
+            Else
+                whereString = "WHERE [Rarity2] = " & testRarity & " AND ([COLOR_IDENTITY] = " & "'" & testColor & "'" & " OR IsNull([COLOR_IDENTITY])) And [SimpleType] = " & " '" & sType & "'" & " AND [Cost2] " & ">" & "'" & 2 & "'"
+            End If
+            
+    End If
+    
+    'Instant
+    If sType = "Instant" Then
+        If testCost > 3 Then
+        whereString = "WHERE [Rarity2] = " & testRarity & " AND [COLOR_IDENTITY] = " & "'" & testColor & "'" & " And [SimpleType] = " & " '" & sType & "'" & " AND [Cost2] " & ">" & "'" & 3 & "'"
+        Else
+        whereString = "WHERE [Rarity2] = " & testRarity & " AND [COLOR_IDENTITY] = " & "'" & testColor & "'" & " And [SimpleType] = " & " '" & sType & "'" & " AND [Cost2] = " & "'" & testCost & "'"
+        End If
+    End If
+    
+    'MsgBox whereString
+    
+    '---Connecting to the Data Source---
+    Set cn = CreateObject("ADODB.Connection")
+    With cn
+        .Provider = "Microsoft.ACE.OLEDB.12.0"
+        .ConnectionString = "Data Source=" & ThisWorkbook.Path & "\" & ThisWorkbook.Name & ";" & _
+        "Extended Properties=""Excel 12.0 Xml;HDR=YES"";"
+        .Open
+    End With
+    
+    
+    '---Run the SQL SELECT Query---
+    sql = "SELECT COUNT(*) FROM [Sheet1$] " & _
+         whereString
+         
+    Set rs = cn.Execute(sql)
+    
+    'Get Count
+    Do
+       count = rs(0)
+       rs.Movenext
+    Loop Until rs.EOF
+    'MsgBox count
+ 
+    ReturnEntryCount = count
+    
+    '---Clean up---
+    rs.Close
+    cn.Close
+    Set cn = Nothing
+    Set rs = Nothing
+
+End Function
+
+
+
+
+
+
+
+
 
 
 
