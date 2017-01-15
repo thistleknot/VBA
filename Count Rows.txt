@@ -13,11 +13,16 @@ Sub ReturnRandom()
     Dim i As Integer
     
     sType = "Creature"
-    testColor = "{W}"
-    testRarity = 3
-    testCost = 2
     
-    whereString = "WHERE [Rarity2] < " & testRarity & " AND [COLOR_IDENTITY]='" & testColor & "'" & " AND [SimpleType] = " & "'" & sType & "'" & " AND [Cost2] = " & "'" & testCost & "'"
+    'Not selecting the right color, selecting blue instead
+    testColor = ""
+    testRarity = 1
+    testCost = 3
+    
+    whereString = "WHERE [Rarity2] = " & testRarity & " AND [COLOR_IDENTITY] = " & "'" & testColor & "'" & " And [SimpleType] = " & " '" & sType & "'" & " AND [Cost2] = " & "'" & testCost & "'"
+    
+    'Artifact
+    'whereString = "WHERE [Rarity2] = " & testRarity & " AND IsNull([COLOR_IDENTITY]) And [SimpleType] = " & " '" & sType & "'" & " AND [Cost2] = " & "'" & testCost & "'"
     
     '---Connecting to the Data Source---
     Set cn = CreateObject("ADODB.Connection")
@@ -28,8 +33,14 @@ Sub ReturnRandom()
         .Open
     End With
     
+    MsgBox sType
+    MsgBox testColor
+    MsgBox testRarity
+    MsgBox testCost
     
     '---Run the SQL SELECT Query---
+    
+    'get count
     sql = "SELECT COUNT(*) FROM [Sheet1$] " & _
          whereString
          
