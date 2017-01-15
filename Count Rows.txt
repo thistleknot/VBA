@@ -12,17 +12,18 @@ Sub ReturnRandom()
     'loop counter
     Dim i As Integer
     
-    sType = "Creature"
+    sType = "Artifact"
     
     'Not selecting the right color, selecting blue instead
-    testColor = ""
+    testColor = "{R}"
     testRarity = 1
-    testCost = 3
+    testCost = 5
     
-    whereString = "WHERE [Rarity2] = " & testRarity & " AND [COLOR_IDENTITY] = " & "'" & testColor & "'" & " And [SimpleType] = " & " '" & sType & "'" & " AND [Cost2] = " & "'" & testCost & "'"
+    'whereString = "WHERE [Rarity2] = " & testRarity & " AND [COLOR_IDENTITY] = " & "'" & testColor & "'" & " And [SimpleType] = " & " '" & sType & "'" & " AND [Cost2] = " & "'" & testCost & "'"
     
     'Artifact
     'whereString = "WHERE [Rarity2] = " & testRarity & " AND IsNull([COLOR_IDENTITY]) And [SimpleType] = " & " '" & sType & "'" & " AND [Cost2] = " & "'" & testCost & "'"
+    whereString = "WHERE [Rarity2] = " & testRarity & " AND ([COLOR_IDENTITY] = " & "'" & testColor & "'" & "OR IsNull([COLOR_IDENTITY])) And [SimpleType] = " & " '" & sType & "'" & " AND [Cost2] = " & "'" & testCost & "'"
     
     '---Connecting to the Data Source---
     Set cn = CreateObject("ADODB.Connection")
