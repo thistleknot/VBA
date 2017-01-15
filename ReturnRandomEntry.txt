@@ -9,47 +9,9 @@ Function ReturnRandomEntry(sType As String, testColor As String, testRarity As I
     'loop counter
     Dim i As Integer
     
-    'Cannot pass "<=" as parameters :/
-    If (sType = "Sorcery") Then
-        If testCost <= 2 Then
-            whereString = "WHERE [Rarity2] = " & testRarity & " AND [COLOR_IDENTITY] = " & "'" & testColor & "'" & " And [SimpleType] = " & " '" & sType & "'" & " AND [Cost2] " & "<=" & "'" & 2 & "'"
-        Else
-            whereString = "WHERE [Rarity2] = " & testRarity & " AND [COLOR_IDENTITY] = " & "'" & testColor & "'" & " And [SimpleType] = " & " '" & sType & "'" & " AND [Cost2] " & ">=" & "'" & 3 & "'"
-        End If
-    End If
-    
-    If (sType = "Enchantment") Then
-        If testCost <= 2 Then
-            whereString = "WHERE [Rarity2] = " & testRarity & " AND [COLOR_IDENTITY] = " & "'" & testColor & "'" & " And [SimpleType] = " & " '" & sType & "'" & " AND [Cost2] " & "<=" & "'" & 2 & "'"
-        Else
-            whereString = "WHERE [Rarity2] = " & testRarity & " AND [COLOR_IDENTITY] = " & "'" & testColor & "'" & " And [SimpleType] = " & " '" & sType & "'" & " AND [Cost2] " & ">" & "'" & 2 & "'"
-        End If
-    End If
-    
-    'If Creature, include color and non color (Artifact)
-    If sType = "Creature" Then
-       whereString = "WHERE [Rarity2] = " & testRarity & " AND ([COLOR_IDENTITY] = " & "'" & testColor & "'" & " OR IsNull([COLOR_IDENTITY])) And [SimpleType] = " & " '" & sType & "'" & " AND [Cost2] = " & "'" & testCost & "'"
-    End If
-    
-    'If Artifact, include color and non color
-    If sType = "Artifact" Then
-            If testCost <= 2 Then
-                whereString = "WHERE [Rarity2] = " & testRarity & " AND ([COLOR_IDENTITY] = " & "'" & testColor & "'" & " OR IsNull([COLOR_IDENTITY])) And [SimpleType] = " & " '" & sType & "'" & " AND [Cost2] " & "<=" & "'" & 2 & "'"
-            Else
-                whereString = "WHERE [Rarity2] = " & testRarity & " AND ([COLOR_IDENTITY] = " & "'" & testColor & "'" & " OR IsNull([COLOR_IDENTITY])) And [SimpleType] = " & " '" & sType & "'" & " AND [Cost2] " & ">" & "'" & 2 & "'"
-            End If
-            
-    End If
-    
-    'Instant
-    If sType = "Instant" Then
-        If testCost > 3 Then
-        whereString = "WHERE [Rarity2] = " & testRarity & " AND [COLOR_IDENTITY] = " & "'" & testColor & "'" & " And [SimpleType] = " & " '" & sType & "'" & " AND [Cost2] " & ">" & "'" & 3 & "'"
-        Else
-        whereString = "WHERE [Rarity2] = " & testRarity & " AND [COLOR_IDENTITY] = " & "'" & testColor & "'" & " And [SimpleType] = " & " '" & sType & "'" & " AND [Cost2] = " & "'" & testCost & "'"
-        End If
-    End If
-    
+    'parse whereString (used because I have two functions that use the same format)
+    whereString = getWhereString(sType, testColor, testRarity, testCost)
+
     'MsgBox whereString
     
     '---Connecting to the Data Source---
@@ -107,20 +69,12 @@ Function ReturnRandomEntry(sType As String, testColor As String, testRarity As I
 
 End Function
 
-Function ReturnEntryCount(sType As String, testColor As String, testRarity As Integer, testCost As String)
-    Dim cn As Object, rs As Object, output As String, sql As String
+Function getWhereString(sType As String, testColor As String, testRarity As Integer, testCost As String)
     
-    Dim count As Integer
-
-    Dim testCostParsed As Integer
-    Dim testCostComparison As String
-
+    Dim whereString As String
     
-    'loop counter
-    Dim i As Integer
+        'Cannot pass "<=" as parameters :/
 
-    'Same code as up top for the if chaisn
-    'Cannot pass "<=" as parameters :/
     If (sType = "Sorcery") Then
         If testCost <= 2 Then
             whereString = "WHERE [Rarity2] = " & testRarity & " AND [COLOR_IDENTITY] = " & "'" & testColor & "'" & " And [SimpleType] = " & " '" & sType & "'" & " AND [Cost2] " & "<=" & "'" & 2 & "'"
@@ -161,6 +115,24 @@ Function ReturnEntryCount(sType As String, testColor As String, testRarity As In
         End If
     End If
     
+    getWhereString = whereString
+
+End Function
+
+Function ReturnEntryCount(sType As String, testColor As String, testRarity As Integer, testCost As String)
+    Dim cn As Object, rs As Object, output As String, sql As String
+    
+    Dim count As Integer
+
+    Dim testCostParsed As Integer
+    Dim testCostComparison As String
+    
+    'loop counter
+    Dim i As Integer
+
+    'parse whereString (used because I have two functions that use the same format)
+    whereString = getWhereString(sType, testColor, testRarity, testCost)
+    
     'MsgBox whereString
     
     '---Connecting to the Data Source---
@@ -195,20 +167,3 @@ Function ReturnEntryCount(sType As String, testColor As String, testRarity As In
     Set rs = Nothing
 
 End Function
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
