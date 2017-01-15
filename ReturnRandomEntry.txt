@@ -17,7 +17,9 @@ Function ReturnRandomEntry(sType As String, testColor As String, testRarity As I
     'testRarity = 3
     'testCost = 2
     
-    whereString = "WHERE [Rarity2] = " & testRarity & " AND [COLOR_IDENTITY]='" & testColor & "'" & " AND [SimpleType] = " & "'" & sType & "'" & " AND [Cost2] = " & "'" & testCost & "'"
+    'whereString = "WHERE [Rarity2] = " & _
+    'testRarity & " AND [COLOR_IDENTITY]='" & testColor & "'" & " AND [SimpleType] = " & "'" & sType & "'" & " AND [Cost2] = " & "'" & testCost & "'"
+    whereString = "WHERE [Rarity2] = " & testRarity & " AND [COLOR_IDENTITY] = " & "'" & testColor & "'" & " And [SimpleType] = " & " '" & sType & "'" & " AND [Cost2] = " & "'" & testCost & "'"
     
     '---Connecting to the Data Source---
     Set cn = CreateObject("ADODB.Connection")
@@ -73,6 +75,8 @@ Function ReturnRandomEntry(sType As String, testColor As String, testRarity As I
     Set rs = Nothing
 
 End Function
+
+
 
 
 
