@@ -1,4 +1,4 @@
-Function ReturnRandomEntry(sType As String, testColor As String, testRarity As Integer, testCost As String)
+Function ReturnRandomEntry(sType As String, testColor As String, testRarity As Integer, testCost As String, formatOption As Integer)
     Dim cn As Object, rs As Object, output As String, sql As String
     
     Dim count As Integer
@@ -64,7 +64,11 @@ Function ReturnRandomEntry(sType As String, testColor As String, testRarity As I
     'MsgBox stringArray(position)
     
     'MsgBox Join(stringArray, vbCrLf)
-    ReturnRandomEntry = stringArray(position, 1) & "; " & stringArray(position, 2) & "; " & stringArray(position, 3) & "; " & stringArray(position, 0)
+    If formatOption = 1 Then
+        ReturnRandomEntry = stringArray(position, 1) & "; " & stringArray(position, 2) & "; " & stringArray(position, 3) & "; " & stringArray(position, 0)
+    Else
+        ReturnRandomEntry = stringArray(position, 0)
+    End If
     
     '---Clean up---
     rs.Close
