@@ -6,6 +6,8 @@ Function ReturnRandomEntry(sType As String, testColor As String, testRarity As I
     Dim testCostParsed As Integer
     Dim testCostComparison As String
     
+    Dim stringArray As Variant
+    
     'loop counter
     Dim i As Integer
     
@@ -37,10 +39,10 @@ Function ReturnRandomEntry(sType As String, testColor As String, testRarity As I
     Loop Until rs.EOF
     'MsgBox count
     
-    ReDim stringArray(count)
+    ReDim stringArray(0 To count, 0 To 3)
     
     'Same query as above, but select [Name] vs Count(*)
-    sql = "SELECT [NAME] FROM [Cards$] " & _
+    sql = "SELECT [NAME], [COLOR_IDENTITY], [SimpleType], [Cost2] FROM [Cards$] " & _
         whereString
     Set rs = cn.Execute(sql)
     
@@ -50,7 +52,10 @@ Function ReturnRandomEntry(sType As String, testColor As String, testRarity As I
     i = 0
     
      Do Until rs.EOF
-        stringArray(i) = rs.Fields(0)
+        stringArray(i, 0) = rs.Fields(0)
+        stringArray(i, 1) = rs.Fields(1)
+        stringArray(i, 2) = rs.Fields(2)
+        stringArray(i, 3) = rs.Fields(3)
         i = i + 1
        rs.Movenext
     Loop
@@ -59,7 +64,7 @@ Function ReturnRandomEntry(sType As String, testColor As String, testRarity As I
     'MsgBox stringArray(position)
     
     'MsgBox Join(stringArray, vbCrLf)
-    ReturnRandomEntry = stringArray(position)
+    ReturnRandomEntry = stringArray(position, 1) & "; " & stringArray(position, 2) & "; " & stringArray(position, 3) & "; " & stringArray(position, 0)
     
     '---Clean up---
     rs.Close
