@@ -108,10 +108,15 @@ Function getWhereString(sType As String, testColor As String, testRarity As Inte
         'If Artifact, include color and non color
         ElseIf sType = "Artifact" Then
             whereString = "WHERE [Rarity2] " & testRarityComparison & testRarity & " AND ([COLOR_IDENTITY] = " & "'" & testColor & "'" & " OR IsNull([COLOR_IDENTITY])) And [SimpleType] = " & " '" & sType & "'" & "AND [Cost2] >= " & "'" & lower & "'" & upperString
+        ElseIf sType = "Basic Land" Then
+            whereString = "WHERE [COLOR_IDENTITY] = " & "'" & testColor & "'" & " And [SimpleType] = " & " '" & sType & "'"
+        ElseIf sType = "Special Land" Then
+            whereString = "WHERE [COLOR_IDENTITY] = " & "'" & testColor & "'" & " And [SimpleType] = " & " '" & sType & "'"
         Else
             'Instant, Sorcery, Enchantment
             whereString = "WHERE [Rarity2] " & testRarityComparison & testRarity & " And [COLOR_IDENTITY] = " & " '" & testColor & "'" & " And [SimpleType] = " & " '" & sType & "'" & "AND [Cost2] >= " & "'" & lower & "'" & upperString
     End If
+    
     
     'MsgBox whereString
     
