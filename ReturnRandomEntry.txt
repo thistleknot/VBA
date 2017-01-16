@@ -25,7 +25,7 @@ Function ReturnRandomEntry(sType As String, testColor As String, testRarity As I
     
     
     '---Run the SQL SELECT Query---
-    sql = "SELECT COUNT(*) FROM [Sheet1$] " & _
+    sql = "SELECT COUNT(*) FROM [Cards$] " & _
          whereString
          
     Set rs = cn.Execute(sql)
@@ -40,7 +40,7 @@ Function ReturnRandomEntry(sType As String, testColor As String, testRarity As I
     ReDim stringArray(count)
     
     'Same query as above, but select [Name] vs Count(*)
-    sql = "SELECT [NAME] FROM [Sheet1$] " & _
+    sql = "SELECT [NAME] FROM [Cards$] " & _
         whereString
     Set rs = cn.Execute(sql)
     
@@ -70,50 +70,50 @@ Function ReturnRandomEntry(sType As String, testColor As String, testRarity As I
 End Function
 
 Function getWhereString(sType As String, testColor As String, testRarity As Integer, testCost As String)
+
+    Dim testRarityComparison As String
+    Dim upperString As String
     
+    If testRarity = 2 Then
+        testRarityComparison = ">="
+        Else
+        testRarityComparison = "="
+    End If
+    
+    'AND [Cost2] " & ">=" & lower & "<=" & upper
+    Dim lower As Integer
+    Dim upper As Integer
+
+    If testCost = 1 Then
+        lower = 0
+        upper = 2
+        upperString = " AND [Cost2] <= " & "'" & upper & "'"
+    ElseIf testCost = 2 Then
+        lower = 2
+        upper = 3
+        upperString = " AND [Cost2] <= " & "'" & upper & "'"
+    ElseIf testCost = 3 Then
+        lower = 3
+        upperString = ""
+    End If
+       
     Dim whereString As String
     
         'Cannot pass "<=" as parameters :/
 
-    If (sType = "Sorcery") Then
-        If testCost <= 2 Then
-            whereString = "WHERE [Rarity2] = " & testRarity & " AND [COLOR_IDENTITY] = " & "'" & testColor & "'" & " And [SimpleType] = " & " '" & sType & "'" & " AND [Cost2] " & "<=" & "'" & 2 & "'"
-        Else
-            whereString = "WHERE [Rarity2] = " & testRarity & " AND [COLOR_IDENTITY] = " & "'" & testColor & "'" & " And [SimpleType] = " & " '" & sType & "'" & " AND [Cost2] " & ">=" & "'" & 3 & "'"
-        End If
-    End If
-    
-    If (sType = "Enchantment") Then
-        If testCost <= 2 Then
-            whereString = "WHERE [Rarity2] = " & testRarity & " AND [COLOR_IDENTITY] = " & "'" & testColor & "'" & " And [SimpleType] = " & " '" & sType & "'" & " AND [Cost2] " & "<=" & "'" & 2 & "'"
-        Else
-            whereString = "WHERE [Rarity2] = " & testRarity & " AND [COLOR_IDENTITY] = " & "'" & testColor & "'" & " And [SimpleType] = " & " '" & sType & "'" & " AND [Cost2] " & ">" & "'" & 2 & "'"
-        End If
-    End If
-    
     'If Creature, include color and non color (Artifact)
     If sType = "Creature" Then
-       whereString = "WHERE [Rarity2] = " & testRarity & " AND ([COLOR_IDENTITY] = " & "'" & testColor & "'" & " OR IsNull([COLOR_IDENTITY])) And [SimpleType] = " & " '" & sType & "'" & " AND [Cost2] = " & "'" & testCost & "'"
-    End If
+       whereString = "WHERE [Rarity2] " & testRarityComparison & testRarity & " AND ([COLOR_IDENTITY] = " & "'" & testColor & "'" & " OR IsNull([COLOR_IDENTITY])) And [SimpleType] = " & " '" & sType & "'" & "AND [Cost2] >= " & "'" & lower & "'" & upperString
     
-    'If Artifact, include color and non color
-    If sType = "Artifact" Then
-            If testCost <= 2 Then
-                whereString = "WHERE [Rarity2] = " & testRarity & " AND ([COLOR_IDENTITY] = " & "'" & testColor & "'" & " OR IsNull([COLOR_IDENTITY])) And [SimpleType] = " & " '" & sType & "'" & " AND [Cost2] " & "<=" & "'" & 2 & "'"
-            Else
-                whereString = "WHERE [Rarity2] = " & testRarity & " AND ([COLOR_IDENTITY] = " & "'" & testColor & "'" & " OR IsNull([COLOR_IDENTITY])) And [SimpleType] = " & " '" & sType & "'" & " AND [Cost2] " & ">" & "'" & 2 & "'"
-            End If
-            
-    End If
-    
-    'Instant
-    If sType = "Instant" Then
-        If testCost > 3 Then
-        whereString = "WHERE [Rarity2] = " & testRarity & " AND [COLOR_IDENTITY] = " & "'" & testColor & "'" & " And [SimpleType] = " & " '" & sType & "'" & " AND [Cost2] " & ">" & "'" & 3 & "'"
+        'If Artifact, include color and non color
+        ElseIf sType = "Artifact" Then
+            whereString = "WHERE [Rarity2] " & testRarityComparison & testRarity & " AND ([COLOR_IDENTITY] = " & "'" & testColor & "'" & " OR IsNull([COLOR_IDENTITY])) And [SimpleType] = " & " '" & sType & "'" & "AND [Cost2] >= " & "'" & lower & "'" & upperString
         Else
-        whereString = "WHERE [Rarity2] = " & testRarity & " AND [COLOR_IDENTITY] = " & "'" & testColor & "'" & " And [SimpleType] = " & " '" & sType & "'" & " AND [Cost2] = " & "'" & testCost & "'"
-        End If
+            'Instant, Sorcery, Enchantment
+            whereString = "WHERE [Rarity2] " & testRarityComparison & testRarity & " And [COLOR_IDENTITY] = " & " '" & testColor & "'" & " And [SimpleType] = " & " '" & sType & "'" & "AND [Cost2] >= " & "'" & lower & "'" & upperString
     End If
+    
+    'MsgBox whereString
     
     getWhereString = whereString
 
@@ -146,7 +146,7 @@ Function ReturnEntryCount(sType As String, testColor As String, testRarity As In
     
     
     '---Run the SQL SELECT Query---
-    sql = "SELECT COUNT(*) FROM [Sheet1$] " & _
+    sql = "SELECT COUNT(*) FROM [Cards$] " & _
          whereString
          
     Set rs = cn.Execute(sql)
