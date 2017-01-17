@@ -109,21 +109,53 @@ Function getWhereString(sType As String, testColor As String, testRarity As Inte
     Dim whereString As String
     
         'Cannot pass "<=" as parameters :/
+    
+    'Multiple colors!
+    Dim colorString As String
+    
+    '3 colors
+    If (Len(testColor) = 9) Then
+        colorString = "([COLOR_IDENTITY] = " & "'" & testColor & "'" & " OR [COLOR_IDENTITY] = " & "'" & Left(testColor, 3) & Right(testColor, 3) & "'" & _
+        " OR [COLOR_IDENTITY] = " & "'" & Left(testColor, 3) & Mid(testColor, 4, 3) & "'" & " OR [COLOR_IDENTITY] = " & "'" & Mid(testColor, 4, 3) & Right(testColor, 3) & "')"
+        '1 to 2 colors
+    Else
+        colorString = "[COLOR_IDENTITY] = " & "'" & testColor & "'"
+        'MsgBox colorString
+
+    End If
+    
+
 
     'If Creature, include color and non color (Artifact)
     If sType = "Creature" Then
-       whereString = "WHERE [Rarity2] " & testRarityComparison & testRarity & " AND ([COLOR_IDENTITY] = " & "'" & testColor & "'" & " OR IsNull([COLOR_IDENTITY])) And [SimpleType] = " & " '" & sType & "'" & "AND [Cost2] >= " & "'" & lower & "'" & upperString
+        colorString = "(" & colorString & " OR IsNull([COLOR_IDENTITY]))"
+        whereString = "WHERE [Rarity2] " & testRarityComparison & testRarity & " AND " & colorString & " And [SimpleType] = " & " '" & sType & "'" & "AND [Cost2] >= " & "'" & lower & "'" & upperString
     
         'If Artifact, include color and non color
         ElseIf sType = "Artifact" Then
-            whereString = "WHERE [Rarity2] " & testRarityComparison & testRarity & " AND ([COLOR_IDENTITY] = " & "'" & testColor & "'" & " OR IsNull([COLOR_IDENTITY])) And [SimpleType] = " & " '" & sType & "'" & "AND [Cost2] >= " & "'" & lower & "'" & upperString
+            colorString = "(" & colorString & " OR IsNull([COLOR_IDENTITY]))"
+            whereString = "WHERE [Rarity2] " & testRarityComparison & testRarity & " AND " & colorString & " And [SimpleType] = " & " '" & sType & "'" & "AND [Cost2] >= " & "'" & lower & "'" & upperString
+            
         ElseIf sType = "Basic Land" Then
+        'MsgBox "Color: " & testColor
             whereString = "WHERE [COLOR_IDENTITY] = " & "'" & testColor & "'" & " And [SimpleType] = " & " '" & sType & "'"
+            
         ElseIf sType = "Special Land" Then
-            whereString = "WHERE [COLOR_IDENTITY] = " & "'" & testColor & "'" & " And [SimpleType] = " & " '" & sType & "'"
+            'If 2 colors
+            If (Len(testColor) = 6) Then
+                colorString = "([COLOR_IDENTITY] = " & "'" & testColor & "'" & " OR [COLOR_IDENTITY] = " & "'" & Left(testColor, 3) & "'" & _
+                " OR [COLOR_IDENTITY] = " & "'" & Right(testColor, 3) & "')"
+                'If 1 color
+                ElseIf (Len(testColor) = 3) Then
+                    colorString = "[COLOR_IDENTITY] = " & " '" & testColor & "'"
+                Else
+                'If 3 colors Append Null
+                colorString = "(" & colorString & " OR IsNull([COLOR_IDENTITY]))"
+            End If
+            whereString = "WHERE " & colorString & " And [SimpleType] = " & " '" & sType & "'"
         Else
             'Instant, Sorcery, Enchantment
-            whereString = "WHERE [Rarity2] " & testRarityComparison & testRarity & " And [COLOR_IDENTITY] = " & " '" & testColor & "'" & " And [SimpleType] = " & " '" & sType & "'" & "AND [Cost2] >= " & "'" & lower & "'" & upperString
+            whereString = "WHERE [Rarity2] " & testRarityComparison & testRarity & " And " & colorString & " And [SimpleType] = " & " '" & sType & "'" & " AND [Cost2] >= " & "'" & lower & "'" & upperString
     End If
     
     
@@ -171,6 +203,11 @@ Function ReturnEntryCount(sType As String, testColor As String, testRarity As In
        rs.Movenext
     Loop Until rs.EOF
     'MsgBox count
+    
+    If count = 0 Then
+        'MsgBox whereString
+    End If
+    
  
     ReturnEntryCount = count
     
